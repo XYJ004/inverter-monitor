@@ -311,7 +311,7 @@ const getStatusBg = (status: string) => {
 // ==================== 组件 ====================
 
 // 顶部导航栏
-function Header({ alerts, onToggleAlerts }: { alerts: Alert[], onToggleAlerts: () => void }) {
+function Header({ alerts, onToggleAlerts, showUserMenu }: { alerts: Alert[], onToggleAlerts: () => void, showUserMenu?: boolean }) {
   const [showMenu, setShowMenu] = useState(false)
   const now = new Date()
 
@@ -319,7 +319,7 @@ function Header({ alerts, onToggleAlerts }: { alerts: Alert[], onToggleAlerts: (
     <motion.header 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-between mb-6 px-4 py-3 glass rounded-2xl"
+      className="flex items-center justify-between mb-6 px-4 py-3 glass rounded-2xl relative z-10"
     >
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center shadow-lg">
@@ -349,42 +349,45 @@ function Header({ alerts, onToggleAlerts }: { alerts: Alert[], onToggleAlerts: (
         </button>
 
         {/* 用户菜单 */}
-        <div className="relative">
-          <button 
-            onClick={() => setShowMenu(!showMenu)}
-            className="flex items-center gap-2 p-2 rounded-xl hover:bg-white/10 transition-all"
-          >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-              <User className="w-4 h-4" />
-            </div>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
-          </button>
+        {showUserMenu && (
+          <div className="relative">
+            <button 
+              onClick={() => setShowMenu(!showMenu)}
+              onBlur={() => setTimeout(() => setShowMenu(false), 200)}
+              className="flex items-center gap-2 p-2 rounded-xl hover:bg-white/10 transition-all"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                <User className="w-4 h-4" />
+              </div>
+              <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showMenu ? 'rotate-180' : ''}`} />
+            </button>
 
-          <AnimatePresence>
-            {showMenu && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                className="absolute right-0 top-full mt-2 w-48 glass rounded-xl p-2 z-[100]"
-              >
-                <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
-                  <Settings className="w-4 h-4" />
-                  <span>系统设置</span>
-                </button>
-                <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
-                  <HelpCircle className="w-4 h-4" />
-                  <span>帮助文档</span>
-                </button>
-                <hr className="my-2 border-white/10" />
-                <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left text-red-400">
-                  <LogOut className="w-4 h-4" />
-                  <span>退出登录</span>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            <AnimatePresence>
+              {showMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  className="absolute right-0 top-full mt-2 w-48 glass rounded-xl p-2 z-[200] shadow-xl"
+                >
+                  <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+                    <Settings className="w-4 h-4" />
+                    <span>系统设置</span>
+                  </button>
+                  <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+                    <HelpCircle className="w-4 h-4" />
+                    <span>帮助文档</span>
+                  </button>
+                  <hr className="my-2 border-white/10" />
+                  <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left text-red-400">
+                    <LogOut className="w-4 h-4" />
+                    <span>退出登录</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </motion.header>
   )
@@ -809,7 +812,7 @@ function AlertPanel({ alerts, onClose, onAcknowledge }: {
       initial={{ opacity: 0, x: 300 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 300 }}
-      className="fixed right-4 top-20 w-96 glass rounded-2xl p-4 z-50 max-h-[80vh] overflow-y-auto"
+      className="fixed right-4 top-24 w-96 glass rounded-2xl p-4 z-[150] max-h-[80vh] overflow-y-auto shadow-2xl"
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -940,7 +943,7 @@ function App() {
 
   return (
     <div className="min-h-screen text-white p-4 md:p-6 max-w-[1600px] mx-auto">
-      <Header alerts={alerts} onToggleAlerts={() => setShowAlerts(!showAlerts)} />
+      <Header alerts={alerts} onToggleAlerts={() => setShowAlerts(!showAlerts)} showUserMenu={true} />
 
       {/* 状态栏 */}
       <div className="flex items-center gap-4 mb-6 flex-wrap">
