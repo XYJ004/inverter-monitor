@@ -4,12 +4,21 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  color: #fff;
 }
 
 /* Custom scrollbar */
@@ -35,12 +44,67 @@ body {
 /* Glass effect */
 .glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Glowing effects */
-.glow-solar { box-shadow: 0 0 30px rgba(255, 184, 0, 0.3); }
-.glow-battery { box-shadow: 0 0 30px rgba(34, 197, 94, 0.3); }
-.glow-grid { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
-.glow-load { box-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
+.glow-solar { 
+  box-shadow: 0 0 30px rgba(255, 184, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+}
+.glow-battery { 
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+}
+.glow-grid { 
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+}
+.glow-load { 
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+}
+
+/* Animations */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px currentColor; }
+  100% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Recharts tooltip */
+.recharts-tooltip-wrapper {
+  z-index: 100 !important;
+}
+
+/* Card hover effects */
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+}
+
+/* Selection color */
+::selection {
+  background: rgba(59, 130, 246, 0.5);
+  color: white;
+}
