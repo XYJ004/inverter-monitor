@@ -1,6 +1,7 @@
 // src/components/DailyStats.tsx
 
-import { Sun, Plug, TrendingDown, DollarSign, Activity, LucideIcon } from 'lucide-react';
+import { Sun, Plug, TrendingDown, DollarSign, Activity } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { DailyStats as DailyStatsType } from '../types';
 
 interface DailyStatsProps {

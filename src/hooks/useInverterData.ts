@@ -128,7 +128,7 @@ export function useInverterData() {
   const [data, setData] = useState<InverterData | null>(null);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
   const [batteryHistory, setBatteryHistory] = useState<BatteryHistoryPoint[]>([]);
-  const [stats, setStats] = useState<DailyStats>(mockGenerator.getDailyStats());
+  const [stats] = useState<DailyStats>(mockGenerator.getDailyStats());
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
 

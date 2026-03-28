@@ -6,6 +6,9 @@ import { Header } from './components/Header';
 import { TabNav } from './components/TabNav';
 import { Dashboard } from './pages/Dashboard';
 import { BatteryDetail } from './pages/BatteryDetail';
+import { Analysis } from './pages/Analysis';
+import { Alerts } from './pages/Alerts';
+import { Settings } from './pages/Settings';
 import { useInverterData } from './hooks/useInverterData';
 import type { TabId } from './types';
 import './index.css';
@@ -17,7 +20,10 @@ function App() {
   if (loading || !data) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <RefreshCw className="w-12 h-12 animate-spin text-blue-500" />
+        <div className="text-center">
+          <RefreshCw className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
+          <p className="text-gray-400">加载中...</p>
+        </div>
       </div>
     );
   }
@@ -36,22 +42,13 @@ function App() {
             <BatteryDetail battery={data.battery} batteryHistory={batteryHistory} />
           )}
           {activeTab === 'analysis' && (
-            <div className="p-6 text-center text-gray-400">
-              <p className="text-xl">发电分析页面</p>
-              <p className="text-sm mt-2">Phase 2 即将实现</p>
-            </div>
+            <Analysis history={history} stats={stats} />
           )}
           {activeTab === 'alerts' && (
-            <div className="p-6 text-center text-gray-400">
-              <p className="text-xl">告警记录页面</p>
-              <p className="text-sm mt-2">Phase 2 即将实现</p>
-            </div>
+            <Alerts alerts={alerts} />
           )}
           {activeTab === 'settings' && (
-            <div className="p-6 text-center text-gray-400">
-              <p className="text-xl">系统设置页面</p>
-              <p className="text-sm mt-2">Phase 3 即将实现</p>
-            </div>
+            <Settings />
           )}
         </main>
 

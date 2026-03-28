@@ -1,6 +1,7 @@
 // src/components/PowerCard.tsx
 
-import { TrendingUp, TrendingDown, Minus, LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface PowerCardProps {
   icon: LucideIcon;
