@@ -366,7 +366,7 @@ function Header({ alerts, onToggleAlerts }: { alerts: Alert[], onToggleAlerts: (
                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                className="absolute right-0 top-full mt-2 w-48 glass rounded-xl p-2 z-50"
+                className="absolute right-0 top-full mt-2 w-48 glass rounded-xl p-2 z-[100]"
               >
                 <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
                   <Settings className="w-4 h-4" />
@@ -470,7 +470,11 @@ function DataCard({
 }
 
 // 主图表
-function MainChart({ data, timeRange }: { data: HistoryPoint[], timeRange: '1h' | '6h' | '12h' | '24h' }) {
+function MainChart({ data, timeRange, onTimeRangeChange }: { 
+  data: HistoryPoint[], 
+  timeRange: '1h' | '6h' | '12h' | '24h',
+  onTimeRangeChange: (range: '1h' | '6h' | '12h' | '24h') => void
+}) {
   const filteredData = data.slice(-(timeRange === '1h' ? 6 : timeRange === '6h' ? 36 : timeRange === '12h' ? 72 : 144))
 
   return (
@@ -484,6 +488,20 @@ function MainChart({ data, timeRange }: { data: HistoryPoint[], timeRange: '1h' 
           <Activity className="w-5 h-5 text-blue-400" />
           功率曲线
         </h2>
+        {/* 时间范围选择 */}
+        <div className="flex items-center gap-1">
+          {(['1h', '6h', '12h', '24h'] as const).map(range => (
+            <button
+              key={range}
+              onClick={() => onTimeRangeChange(range)}
+              className={`px-3 py-1.5 rounded-md text-sm transition ${
+                timeRange === range ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {range}
+            </button>
+          ))}
+        </div>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={filteredData}>
@@ -925,32 +943,15 @@ function App() {
       <Header alerts={alerts} onToggleAlerts={() => setShowAlerts(!showAlerts)} />
 
       {/* 状态栏 */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-        <div className="flex items-center gap-4">
-          <StatusBadge status={data.status} />
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <Thermometer className="w-4 h-4" />
-            <span>设备温度: {data.temperature.toFixed(1)}°C</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <Activity className="w-4 h-4" />
-            <span>系统效率: {data.efficiency.toFixed(1)}%</span>
-          </div>
+      <div className="flex items-center gap-4 mb-6 flex-wrap">
+        <StatusBadge status={data.status} />
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Thermometer className="w-4 h-4" />
+          <span>设备温度: {data.temperature.toFixed(1)}°C</span>
         </div>
-
-        {/* 时间范围选择 */}
-        <div className="flex items-center gap-2 glass rounded-lg p-1">
-          {(['1h', '6h', '12h', '24h'] as const).map(range => (
-            <button
-              key={range}
-              onClick={() => setTimeRange(range)}
-              className={`px-3 py-1.5 rounded-md text-sm transition ${
-                timeRange === range ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              {range}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Activity className="w-4 h-4" />
+          <span>系统效率: {data.efficiency.toFixed(1)}%</span>
         </div>
       </div>
 
@@ -1021,7 +1022,7 @@ function App() {
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         <div className="lg:col-span-2">
-          <MainChart data={history} timeRange={timeRange} />
+          <MainChart data={history} timeRange={timeRange} onTimeRangeChange={setTimeRange} />
         </div>
         <BatteryChart data={history} />
       </div>
