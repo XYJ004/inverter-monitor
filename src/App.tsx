@@ -31,7 +31,12 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="max-w-[1800px] mx-auto">
-        <Header data={data} alerts={alerts} />
+        <Header 
+          data={data} 
+          alerts={alerts} 
+          onBellClick={() => setActiveTab('alerts')}
+          onSettingsClick={() => setActiveTab('settings')}
+        />
         <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
         
         <main>

@@ -1,7 +1,8 @@
 // src/pages/BatteryDetail.tsx
 
+import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Activity, Settings } from 'lucide-react';
+import { Activity, Settings, Save, Check } from 'lucide-react';
 import { BatteryGauge } from '../components/BatteryGauge';
 import type { BatteryData, BatteryHistoryPoint } from '../types';
 
@@ -11,6 +12,21 @@ interface BatteryDetailProps {
 }
 
 export function BatteryDetail({ battery, batteryHistory }: BatteryDetailProps) {
+  const [socLow, setSocLow] = useState(10);
+  const [socHigh, setSocHigh] = useState(95);
+  const [tempHigh, setTempHigh] = useState(45);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    // 模拟保存
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* 大号电池仪表盘 */}
@@ -59,8 +75,9 @@ export function BatteryDetail({ battery, batteryHistory }: BatteryDetailProps) {
             <div className="flex items-center gap-2">
               <input 
                 type="number" 
-                defaultValue={10} 
-                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white"
+                value={socLow}
+                onChange={(e) => setSocLow(Number(e.target.value))}
+                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-gray-500">%</span>
             </div>
@@ -70,8 +87,9 @@ export function BatteryDetail({ battery, batteryHistory }: BatteryDetailProps) {
             <div className="flex items-center gap-2">
               <input 
                 type="number" 
-                defaultValue={95} 
-                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white"
+                value={socHigh}
+                onChange={(e) => setSocHigh(Number(e.target.value))}
+                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-gray-500">%</span>
             </div>
@@ -81,15 +99,37 @@ export function BatteryDetail({ battery, batteryHistory }: BatteryDetailProps) {
             <div className="flex items-center gap-2">
               <input 
                 type="number" 
-                defaultValue={45} 
-                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white"
+                value={tempHigh}
+                onChange={(e) => setTempHigh(Number(e.target.value))}
+                className="bg-white/10 rounded-lg px-3 py-2 w-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-gray-500">°C</span>
             </div>
           </div>
         </div>
-        <button className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-medium transition-colors">
-          保存设置
+        <button 
+          onClick={handleSave}
+          disabled={saving}
+          className={`mt-4 px-4 py-2 rounded-lg text-white font-medium transition-all flex items-center gap-2 ${
+            saved ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'
+          } disabled:opacity-50`}
+        >
+          {saving ? (
+            <>
+              <Save className="w-4 h-4 animate-pulse" />
+              保存中...
+            </>
+          ) : saved ? (
+            <>
+              <Check className="w-4 h-4" />
+              已保存！
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" />
+              保存设置
+            </>
+          )}
         </button>
       </div>
     </div>

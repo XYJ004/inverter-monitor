@@ -7,9 +7,11 @@ import type { InverterData, Alert } from '../types';
 interface HeaderProps {
   data: InverterData;
   alerts: Alert[];
+  onBellClick?: () => void;
+  onSettingsClick?: () => void;
 }
 
-export function Header({ data, alerts }: HeaderProps) {
+export function Header({ data, alerts, onBellClick, onSettingsClick }: HeaderProps) {
   const unackCount = alerts.filter(a => !a.acknowledged).length;
 
   return (
@@ -37,7 +39,7 @@ export function Header({ data, alerts }: HeaderProps) {
           data.status === 'warning' ? 'bg-yellow-500/20 text-yellow-400' : 
           'bg-red-500/20 text-red-400'
         }`}>
-          <span className={`w-2 h-2 rounded-full ${
+          <span className={`w-2 h-2 rounded-full animate-pulse ${
             data.status === 'normal' ? 'bg-green-400' : 
             data.status === 'warning' ? 'bg-yellow-400' : 
             'bg-red-400'
@@ -49,16 +51,24 @@ export function Header({ data, alerts }: HeaderProps) {
           设备温度: <span className="text-white font-medium">{data.temperature.toFixed(1)}°C</span>
         </div>
 
-        <button className="relative p-2 rounded-lg hover:bg-white/10 transition-colors">
+        <button 
+          onClick={onBellClick}
+          className="relative p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+          title="查看告警"
+        >
           <Bell className="w-5 h-5 text-gray-400" />
           {unackCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
               {unackCount}
             </span>
           )}
         </button>
 
-        <button className="p-2 rounded-lg hover:bg-white/10 transition-colors">
+        <button 
+          onClick={onSettingsClick}
+          className="p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+          title="系统设置"
+        >
           <Settings className="w-5 h-5 text-gray-400" />
         </button>
       </div>
